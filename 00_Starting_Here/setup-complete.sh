@@ -33,7 +33,7 @@
 #   ./setup-complete.sh my-project myuser         # Override project & user
 #   ./setup-complete.sh my-project myuser storygen-main  # All specified
 
-set -e
+
 
 # Colors for output
 RED='\033[0;31m'
@@ -142,14 +142,15 @@ setup_env_file() {
         
         if [ -f "$template_file" ]; then
             echo -e "${BLUE}📋 Found env.template file${NC}"
-            read -p "Create .env file from template? (Y/n): " create_env
-            if [[ ! $create_env =~ ^[Nn]$ ]]; then
-                cp "$template_file" "$env_file"
-                echo -e "${GREEN}✅ Created .env file from template${NC}"
-                echo -e "${YELLOW}⚠️ Please edit ../.env with your actual values before continuing${NC}"
-                echo "Required values: GOOGLE_CLOUD_PROJECT_ID, GITHUB_USERNAME, GITHUB_REPO"
-                echo ""
-                read -p "Press Enter after editing .env file to continue..."
+                        # read -p "Create .env file from template? (Y/n): " create_env
+                        create_env="Y"
+                        if [[ ! $create_env =~ ^[Nn]$ ]]; then
+                            cp "$template_file" "$env_file"
+                            echo -e "${GREEN}✅ Created .env file from template${NC}"
+                            echo -e "${YELLOW}⚠️ Please edit ../.env with your actual values before continuing${NC}"
+                            echo "Required values: GOOGLE_CLOUD_PROJECT_ID, GITHUB_USERNAME, GITHUB_REPO"
+                            echo ""
+                            # read -p "Press Enter after editing .env file to continue..."
             fi
         else
             echo -e "${YELLOW}⚠️ No template found. You can create .env manually or continue with interactive input${NC}"
@@ -268,7 +269,9 @@ setup_virtual_environment() {
     log "🚀 Starting virtual environment setup..."
     echo -e "${CYAN}🔧 Step 1: Setting up shared virtual environment${NC}"
     echo "=================================================="
-    
+
+    echo "DEBUG: Current directory: $(pwd)"
+    echo "DEBUG: Checking for file: $(pwd)/setup-shared-venv.sh"
     if [ ! -f "./setup-shared-venv.sh" ]; then
         echo -e "${RED}❌ setup-shared-venv.sh not found in current directory${NC}"
         exit 1
